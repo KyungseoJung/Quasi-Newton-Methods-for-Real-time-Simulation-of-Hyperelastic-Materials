@@ -270,6 +270,28 @@ bool XMLSceneVisitor::VisitEnter(const tinyxml2::XMLElement& element, const tiny
 		//m_current = new ObjMesh(DEFAULT_OBJ_MODEL, center, scale);
   //      return true;
   //  }
+  // #1 여기부터 - bunny 실행해보기 위한 코드 추가 --------------------------
+  // 1) global_headers.h 파일에도 DEFAULT_OBJ_MODEL이 bunny로 설정되어 있는 것 확인 완료
+  // 2) test_scene.xml 파일 주석 처리 되어있는 <obj> 코드 부분을 주석해제 해야 함.
+
+	else if (std::string(element.Value()) == "obj")
+	{
+		if (std::string(element.Parent()->Value()) != "primitives")
+			return false;
+		assert(m_current == NULL);
+
+		double cx(0.0), cy(1.0), cz(0.0), scale(1.0);
+
+		element.QueryDoubleAttribute("cx", &cx);
+		element.QueryDoubleAttribute("cy", &cy);
+		element.QueryDoubleAttribute("cz", &cz);
+		element.QueryDoubleAttribute("scale", &scale);
+
+		glm::vec3 center(cx, cy, cz);
+		m_current = new ObjMesh(DEFAULT_OBJ_MODEL, center, scale);
+		return true;
+		}
+	// #1 여기까지 - bunny 실행해보기 위한 코드 추가 --------------------------
     else
         return false;
 }
